@@ -23,7 +23,10 @@ public:
 	void rotateL(double degree,DIR dir);
 	void rotateU(double degree,DIR dir);
 	void rotateD(double degree,DIR dir);
-
-
+	~TheRubiksCube()
+	{
+		closegraph();
+	}
+	void processinput();
 };
 

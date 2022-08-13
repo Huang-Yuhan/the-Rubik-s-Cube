@@ -18,7 +18,7 @@
     <ClInclude Include="TheRubiksCube.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="vec3.h">
+    <ClInclude Include="vec.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Plane.h">
@@ -41,7 +41,10 @@
     <ClCompile Include="TheRubiksCube.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="vec3.cpp">
+    <ClCompile Include="vec.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

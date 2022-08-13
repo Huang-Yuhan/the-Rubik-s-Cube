@@ -1,4 +1,4 @@
-#include"vec3.h"
+#include"vec.h"
 
 vec3 operator+(const vec3& a, const vec3& b)
 {
@@ -81,4 +81,25 @@ void rotateZ(vec3& vertex, double degree)//物体坐标系沿y轴正方向顺时
 double length(const vec3& a)
 {
 	return distance(a, vec3(0, 0, 0));
+}
+
+
+vec4 operator+(const vec4& a, const vec4& b)
+{
+	return vec4(a.x + b.x, a.y + b.y, a.z + b.z,a.w+b.w);
+}
+
+vec4 operator-(const vec4& a, const vec4& b)
+{
+	return vec4(a.x - b.x, a.y - b.y, a.z - b.z,a.w-b.w);
+}
+
+vec4 operator*(const vec4& a, double n)
+{
+	return vec4(a.x * n, a.y * n, a.z * n,a.w*n);
+}
+
+vec4 operator/(const vec4& a, double n)
+{
+	return vec4(a.x / n, a.y / n, a.z / n,a.w/n);
 }

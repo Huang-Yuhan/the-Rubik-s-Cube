@@ -1,9 +1,9 @@
 #include "TheRubiksCube.h"
-
+#include<vector>
+#include<algorithm>
+#include<iostream>
 const int offsete = 2 * e;
 
-const int width = 1440;
-const int height = 900;
 const double eps = 1e-6;
 
 inline bool isequal(double a, double b)
@@ -51,7 +51,7 @@ TheRubiksCube::TheRubiksCube()
 
 void TheRubiksCube::GameStart()
 {
-	initgraph(width, height);
+	initgraph(width, height, EW_SHOWCONSOLE);
 	setorigin(width / 2, height / 2);//将原点设置在中心
 	setbkcolor(RGB(25, 25, 25));//设置背景颜色
 	BeginBatchDraw();//批量绘制，类似于OpenGL中缓冲区，最后会一起绘制出来，否则绘制出来的图形会偶尔有闪烁现象
@@ -127,5 +127,47 @@ void TheRubiksCube::rotateD(double degree, DIR dir)
 
 void TheRubiksCube::draw()
 {
+	cleardevice();
+	std::vector<Plane> v;
+	for (int i = 0; i < 27; i++)
+		for (int j = 0; j < 6;j++)v.push_back(cube[i].plane[j]);
+	std::sort(v.begin(), v.end());
+	auto it = v.begin();
+	for (it; it != v.end(); it++)it->draw();
+	FlushBatchDraw();
+}
 
+void TheRubiksCube::processinput()
+{
+	const int W = 0x57;
+	const int S = 0x53;
+	const int A = 0x40;
+	const int D = 0x44;
+	const double step = pi * 3 / 180;//10度的步长
+	flushmessage(EM_MOUSE);
+	ExMessage m = getmessage();
+	switch (m.message)
+	{
+	case WM_KEYDOWN://按下wsad
+		std::cout << (char)tolower(m.vkcode) << std::endl;
+		switch ((char)tolower(m.vkcode))
+		{
+		case 'w':watcher.rotate_up(step); break;
+		case 's':watcher.rotate_down(step);  break;
+		case 'a':watcher.rotate_left(step);  break;
+		case 'd':watcher.rotate_right(step);  break;
+		default:break;
+		}
+		break;
+	case WM_LBUTTONDOWN://按下鼠标左键，顺时针旋转
+		//找到面
+		//旋转
+		break;
+	case WM_RBUTTONDOWN://按下鼠标左键，逆时针旋转
+		//找到面
+		//旋转
+		break;
+	default:break;
+	}
+	draw();
 }

@@ -28,6 +28,7 @@ public:
 	void bindoffset(const vec3& a)
 	{
 		offset = a;
+		for (int i = 0; i < 6; i++)plane[i].bindoffset(offset);
 	}
 	void local_rotate_x(double degree)
 	{
