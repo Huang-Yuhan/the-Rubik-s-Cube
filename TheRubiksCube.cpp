@@ -143,7 +143,7 @@ void TheRubiksCube::processinput()
 	const int S = 0x53;
 	const int A = 0x40;
 	const int D = 0x44;
-	const double step = pi * 3 / 180;//10度的步长
+	const double step = pi * 1 / 180;//10度的步长
 	flushmessage(EM_MOUSE);
 	ExMessage m = getmessage();
 	switch (m.message)

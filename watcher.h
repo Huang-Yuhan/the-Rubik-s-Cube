@@ -22,7 +22,7 @@ public:
 
 	Watcher()
 	{
-		rho =800; phi = 0; theta = pi / 2;
+		rho =400; phi = 0; theta = pi / 2;
 		update();
 	}
 	void update()

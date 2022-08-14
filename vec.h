@@ -67,10 +67,3 @@ vec4 operator+(const vec4& a, const vec4& b);
 vec4 operator-(const vec4& a, const vec4& b);
 vec4 operator*(const vec4& a, double n);
 vec4 operator/(const vec4& a, double n);
-double distance(const vec4& a, const vec4& b);
-double Cos(const vec4& a, const vec4& b);//计算两个向量之间的夹角余弦值
-vec4 cross(const vec4& u, const vec4& v);//向量叉乘
-void rotateX(vec4& vertex, double degree);//物体坐标系沿x轴正方向顺时针旋转degree度
-void rotateY(vec4& vertex, double degree);//物体坐标系沿y轴正方向顺时针旋转degree度
-void rotateZ(vec4& vertex, double degree);//物体坐标系沿y轴正方向顺时针旋转degree度
-double length(const vec3& a);
