@@ -35,7 +35,7 @@ public:
 		u = cross(updir, w);
 		u = u / length(u);
 		v = cross(w, u);
-		std::cout << "(" << pos.x << "," << pos.y << "," << pos.z << ")" << std::endl;
+		//std::cout << "(" << pos.x << "," << pos.y << "," << pos.z << ")" << std::endl;
 	}
 	void rotate_right(double degree)
 	{

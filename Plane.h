@@ -70,10 +70,10 @@ public:
 	bool isinside(const POINT& a)//判断a（屏幕里的坐标）是否在这个面在屏幕当中的显示区域
 	{
 		POINT p[4] = {screen_coordinate(*point[0]),screen_coordinate(*point[1]) ,screen_coordinate(*point[2]) ,screen_coordinate(*point[3])};//最后在屏幕中显示的坐标
-		int result=cross({ a.x - p[0].x,a.y - p[0].y }, { p[1].x - p[0].x,p[1].y - p[0].y });
+		int result = cross({ a.x - p[3].x,a.y - p[3].y }, { p[0].x - p[3].x,p[0].y - p[3].y }), tmp;
 		for (int i = 0; i < 3; i++)
 		{
-			int tmp=cross({ a.x - p[i].x,a.y - p[i].y }, { p[i + 1].x - p[i].x,p[i + 1].y - p[i].y });
+			tmp=cross({ a.x - p[i].x,a.y - p[i].y }, { p[i + 1].x - p[i].x,p[i + 1].y - p[i].y });
 			if ((tmp>0&&result<0)||(tmp<0&&result>0))return false;
 		}
 		return true;

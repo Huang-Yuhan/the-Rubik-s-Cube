@@ -38,20 +38,20 @@ TheRubiksCube::TheRubiksCube()
 	for (int i = 0; i < 27; i++)cube[i].plane[3].setcolor(RGB(231,101,26));//自行百度或自行尝试
 	for (int i = 0; i < 27; i++)cube[i].plane[4].setcolor(YELLOW);
 	for (int i = 0; i < 27; i++)cube[i].plane[5].setcolor(WHITE);
+	pre.message = WM_MOUSEMOVE;
 
-	plcter[0] = &cube[CubeIndex(0,0,1)].plane[0];
-	plcter[1] = &cube[CubeIndex(1, 0, 0)].plane[1];
-	plcter[2] = &cube[CubeIndex(0, 0, -1)].plane[2];
-	plcter[3] = &cube[CubeIndex(-1, 0, 0)].plane[3];
-	plcter[4] = &cube[CubeIndex(0, 1, 0 )].plane[4];
-	plcter[5] = &cube[CubeIndex(0, -1, 0)].plane[5];
-
-
+	for(int i=0;i<27;i++)
+		for (int j = 0; j < 6; j++)
+		{
+			vec3 tmp= cube[i].plane[j].center();
+			if ((isequal(abs(tmp.x), 3 * e) || isequal(abs(tmp.y), 3 * e) || isequal(abs(tmp.z), 3 * e)) == false)
+				cube[i].plane[j].setcolor(RGB(25, 25, 25));
+		}
 }
 
 void TheRubiksCube::GameStart()
 {
-	initgraph(width, height, EW_SHOWCONSOLE);
+	initgraph(width, height);
 	setorigin(width / 2, height / 2);//将原点设置在中心
 	setbkcolor(RGB(25, 25, 25));//设置背景颜色
 	BeginBatchDraw();//批量绘制，类似于OpenGL中缓冲区，最后会一起绘制出来，否则绘制出来的图形会偶尔有闪烁现象
@@ -70,6 +70,7 @@ void TheRubiksCube::rotateF(double degree,DIR dir)
 		{
 			cube[i].local_rotate_z(degree);
 			rotateZ(cube[i].offset,degree);
+			cube[i].bindoffset(cube[i].offset);
 		}
 }
 
@@ -81,6 +82,7 @@ void TheRubiksCube::rotateR(double degree, DIR dir)
 		{
 			cube[i].local_rotate_x(degree);
 			rotateX(cube[i].offset, degree);
+			cube[i].bindoffset(cube[i].offset);
 		}
 }
 void TheRubiksCube::rotateB(double degree, DIR dir)
@@ -91,6 +93,7 @@ void TheRubiksCube::rotateB(double degree, DIR dir)
 		{
 			cube[i].local_rotate_z(-degree);
 			rotateZ(cube[i].offset, -degree);
+			cube[i].bindoffset(cube[i].offset);
 		}
 }
 void TheRubiksCube::rotateL(double degree, DIR dir)
@@ -101,6 +104,7 @@ void TheRubiksCube::rotateL(double degree, DIR dir)
 		{
 			cube[i].local_rotate_x(-degree);
 			rotateX(cube[i].offset, -degree);
+			cube[i].bindoffset(cube[i].offset);
 		}
 }
 void TheRubiksCube::rotateU(double degree, DIR dir)
@@ -111,6 +115,7 @@ void TheRubiksCube::rotateU(double degree, DIR dir)
 		{
 			cube[i].local_rotate_y(degree);
 			rotateY(cube[i].offset, degree);
+			cube[i].bindoffset(cube[i].offset);
 		}
 }
 
@@ -137,13 +142,80 @@ void TheRubiksCube::draw()
 	FlushBatchDraw();
 }
 
+void TheRubiksCube::solve(int x, int y,DIR dir)
+{
+	std::vector<Plane> v;
+	for (int i = 0; i < 27; i++)
+		for (int j = 0; j < 6; j++)v.push_back(cube[i].plane[j]);
+	std::sort(v.begin(), v.end());
+	auto it = v.begin();
+	auto index = v.end();
+	for (it; it != v.end(); it++)
+	{
+		if (it->isinside({ x,y }))index = it;
+	}
+	if(index==v.end())return;
+	vec3 cen = index->center();
+	int step = 2;
+	int cnt = 45;
+	if (isequal(cen.x, 3 * e))
+	{
+		for (int i = 1; i <= cnt; i++)
+		{
+			rotateR(step, dir);
+			draw();
+		}
+	}
+	if (isequal(cen.x, -3 * e))
+	{
+		for (int i = 1; i <= cnt; i++)
+		{
+			rotateL(step, dir);
+			draw();
+		}
+	}
+	if (isequal(cen.y, 3 * e))
+	{
+		for (int i = 1; i <= cnt; i++)
+		{
+			rotateU(step, dir);
+			draw();
+		}
+	}
+	if (isequal(cen.y, -3 * e))
+	{
+		for (int i = 1; i <= cnt; i++)
+		{
+			rotateD(step, dir);
+			draw();
+		}
+	}
+	if (isequal(cen.z, 3 * e))
+	{
+		for (int i = 1; i <= cnt; i++)
+		{
+			rotateF(step, dir);
+			draw();
+		}
+	}
+	if (isequal(cen.z, -3 * e))
+	{
+		for (int i = 1; i <= cnt; i++)
+		{
+			rotateB(step, dir);
+			draw();
+		}
+	}
+
+}
+
 void TheRubiksCube::processinput()
 {
 	const int W = 0x57;
 	const int S = 0x53;
 	const int A = 0x40;
 	const int D = 0x44;
-	const double step = pi * 1 / 180;//10度的步长
+	const double step = pi * 2 / 180;//10度的步长
 	flushmessage(EM_MOUSE);
 	ExMessage m = getmessage();
 	switch (m.message)
@@ -160,14 +232,19 @@ void TheRubiksCube::processinput()
 		}
 		break;
 	case WM_LBUTTONDOWN://按下鼠标左键，顺时针旋转
+		if (pre.message == WM_LBUTTONDOWN)break;
 		//找到面
 		//旋转
+		solve(m.x-width/2,m.y-height/2,DIR::anti_clockwise);
 		break;
-	case WM_RBUTTONDOWN://按下鼠标左键，逆时针旋转
+	case WM_RBUTTONDOWN://按下鼠标右键，逆时针旋转
+		if (pre.message == WM_RBUTTONDOWN)break;
 		//找到面
 		//旋转
+		solve(m.x-width/2, m.y-height/2, DIR::clockwise);
 		break;
 	default:break;
 	}
 	draw();
+	pre = m;
 }

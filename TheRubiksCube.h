@@ -16,7 +16,6 @@ public:
 	TheRubiksCube();
 	void GameStart();
 	void draw();//绘图
-	Plane* plcter[6];//Plane center
 	void rotateF(double degree,DIR dir);
 	void rotateR(double degree,DIR dir);
 	void rotateB(double degree,DIR dir);
@@ -28,5 +27,7 @@ public:
 		closegraph();
 	}
 	void processinput();
+	ExMessage pre;
+	void solve(int x, int y,DIR dir);//处理鼠标旋转
 };
 
