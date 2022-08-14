@@ -3,9 +3,6 @@
 #include"graphics.h"
 #include"Watcher.h"
 #include"matrix.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 const int width = 1440;
 const int height = 900;
 extern Watcher watcher;
@@ -32,33 +29,17 @@ public:
 	POINT screen_coordinate(const vec3& a)
 	{
 		Matrix look_at = LookAt(watcher.u, watcher.v, watcher.w, watcher.pos);
-		/*Matrix Mvp = Matrix(vec4(width / 2.0, 0, 0, 0), vec4(0, height / 2.0, 0, 0), vec4(0, 0, 1, 0), vec4((width - 1.0) / 2, (height - 1.0) / 2, 0, 1));
-		double n = -600;
-		double f = -1500;
-		double l = -400;
-		double r = 400;
-		double b = -400;
-		double t = 400;
-		Matrix Mper = Matrix(vec4(2*n/(r-l),0,0,0), vec4(0,2*n/(t-b),0,0), vec4((l+r)/(l-r),(b+t)/(b-t),(f+n)/(n-f),-1), vec4(0,0,2*f*n/(f-n),0));
-		vec3 tmp = world_coordinate(a);
-		vec4 ans = Mvp * Mper * look_at * vec4(tmp.x,tmp.y,tmp.z,1);
-		return { (int)(ans.y / ans.w),(int)(ans.x / ans.w) };*/
 		vec3 tmp = world_coordinate(a);
 		vec4 ans = look_at * vec4(tmp.x, tmp.y, tmp.z, 1);
 		vec3 anspoint;
 		anspoint.x = ans.x / ans.w;
 		anspoint.y = ans.y / ans.w;
 		anspoint.z = ans.z / ans.w;
-		double n = -100;
-		double f = -1000;
+		double n = -1100;
 		POINT returnvalue = { (int)(n * anspoint.x / anspoint.z),(int)(-n * anspoint.y / anspoint.z) };
 		return returnvalue;
-		
-		/*glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 100.0f, 1500.0f);
-		vec3 b = look_at * world_coordinate(a);
-		glm::vec4 ans= proj * glm::vec4(b.x,b.y,b.z,1);
-		POINT anspoint = { (int)(ans.y / ans.w),(int)(ans.x / ans.w) };
-		return anspoint; */
+		//为何当n取小的时候，会使画面产生广角的效果？
+
 	}
 	void bindoffset(const vec3& a)
 	{
